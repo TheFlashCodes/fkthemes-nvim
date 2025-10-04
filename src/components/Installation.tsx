@@ -1,7 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Copy, Check } from "lucide-react";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import CodeBlock from "@/components/ui/CodeBlock";
+import { ThemeContext, themes } from "@/contexts/ThemeContext";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const codeExample = `{
   "flashcodes-themayankjha/fkthemes.nvim",
@@ -22,6 +25,49 @@ const codeExample = `{
 
 const Installation = () => {
   const [copied, setCopied] = useState(false);
+  const { theme } = useContext(ThemeContext);
+
+  const syntaxTheme = {
+    ...vscDarkPlus,
+    'pre[class*="language-"]': {
+      ...vscDarkPlus['pre[class*="language-"]'],
+      background: 'transparent',
+    },
+    'code[class*="language-"]': {
+      ...vscDarkPlus['code[class*="language-"]'],
+      color: themes[theme].fg,
+      background: 'transparent',
+    },
+    comment: { color: themes[theme].comment },
+    keyword: { color: themes[theme].keyword },
+    string: { color: themes[theme].string },
+    function: { color: themes[theme].function },
+    variable: { color: themes[theme].variable },
+    punctuation: { color: themes[theme].fg },
+    operator: { color: themes[theme].fg },
+    number: { color: themes[theme].keyword },
+    property: { color: themes[theme].keyword },
+    tag: { color: themes[theme].keyword },
+    boolean: { color: themes[theme].keyword },
+    symbol: { color: themes[theme].keyword },
+    deleted: { color: themes[theme].keyword },
+    selector: { color: themes[theme].string },
+    'attr-name': { color: themes[theme].string },
+    char: { color: themes[theme].string },
+    builtin: { color: themes[theme].string },
+    inserted: { color: themes[theme].string },
+    entity: { color: themes[theme].function, cursor: 'help' },
+    url: { color: themes[theme].function },
+    '.language-css .token.string': { color: themes[theme].function },
+    '.style .token.string': { color: themes[theme].function },
+    atrule: { color: themes[theme].variable },
+    'attr-value': { color: themes[theme].variable },
+    'class-name': { color: themes[theme].function },
+    regex: { color: themes[theme].variable },
+    important: { color: themes[theme].variable, fontWeight: 'bold' },
+    bold: { fontWeight: 'bold' },
+    italic: { fontStyle: 'italic' },
+  };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(codeExample);
@@ -71,11 +117,7 @@ const Installation = () => {
             </Button>
           </div>
           <div className="p-6 overflow-x-auto">
-            <pre className="font-mono text-sm leading-relaxed">
-              <code className="text-foreground">
-                {codeExample}
-              </code>
-            </pre>
+            <CodeBlock code={codeExample} language="lua" customStyle={syntaxTheme} />
           </div>
         </Card>
 
