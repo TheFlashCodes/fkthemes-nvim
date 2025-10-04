@@ -1,90 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Terminal, ChevronRight } from "lucide-react";
-
-const themes = {
-  catppuccin: {
-    name: "Catppuccin",
-    bg: "#1e1e2e",
-    fg: "#cdd6f4",
-    comment: "#6c7086",
-    keyword: "#cba6f7",
-    string: "#a6e3a1",
-    function: "#89b4fa",
-    variable: "#f9e2af",
-  },
-  tokyonight: {
-    name: "Tokyo Night",
-    bg: "#1a1b26",
-    fg: "#c0caf5",
-    comment: "#565f89",
-    keyword: "#bb9af7",
-    string: "#9ece6a",
-    function: "#7aa2f7",
-    variable: "#e0af68",
-  },
-  gruvbox: {
-    name: "Gruvbox",
-    bg: "#282828",
-    fg: "#ebdbb2",
-    comment: "#928374",
-    keyword: "#fe8019",
-    string: "#b8bb26",
-    function: "#fabd2f",
-    variable: "#83a598",
-  },
-  "rose-pine": {
-    name: "Rose Pine",
-    bg: "#191724",
-    fg: "#e0def4",
-    comment: "#6e6a86",
-    keyword: "#c4a7e7",
-    string: "#9ccfd8",
-    function: "#ebbcba",
-    variable: "#f6c177",
-  },
-  moonlight: {
-    name: "Moonlight",
-    bg: "#222436",
-    fg: "#c8d3f5",
-    comment: "#7a88cf",
-    keyword: "#ffc777",
-    string: "#c3e88d",
-    function: "#82aaff",
-    variable: "#ff966c",
-  },
-  material: {
-    name: "Material",
-    bg: "#263238",
-    fg: "#eeffff",
-    comment: "#546e7a",
-    keyword: "#c792ea",
-    string: "#c3e88d",
-    function: "#82aaff",
-    variable: "#ffcb6b",
-  },
-  dracula: {
-    name: "Dracula",
-    bg: "#282a36",
-    fg: "#f8f8f2",
-    comment: "#6272a4",
-    keyword: "#ff79c6",
-    string: "#f1fa8c",
-    function: "#8be9fd",
-    variable: "#ffb86c",
-  },
-  nord: {
-    name: "Nord",
-    bg: "#2e3440",
-    fg: "#d8dee9",
-    comment: "#616e88",
-    keyword: "#81a1c1",
-    string: "#a3be8c",
-    function: "#88c0d0",
-    variable: "#ebcb8b",
-  },
-};
+import CodeBlock from "@/components/ui/CodeBlock";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { ThemeContext, themes } from "@/contexts/ThemeContext";
 
 const codeExample = `-- Configure awesome plugin
 local function setup()
@@ -101,7 +22,7 @@ end
 return { setup = setup }`;
 
 const InteractiveDemo = () => {
-  const [currentTheme, setCurrentTheme] = useState<keyof typeof themes>("catppuccin");
+  const { theme: currentTheme, setTheme: setCurrentTheme, themes } = useContext(ThemeContext);
   const [input, setInput] = useState("");
   const [showPicker, setShowPicker] = useState(false);
   const [history, setHistory] = useState<string[]>([
@@ -127,10 +48,7 @@ const InteractiveDemo = () => {
 
       if (themeKey && themeKey in themes) {
         setCurrentTheme(themeKey as keyof typeof themes);
-        setHistory((prev) => [
-          ...prev,
-          `✓ Theme switched to ${themes[themeKey as keyof typeof themes].name}`,
-        ]);
+        toast.success(`Theme switched to ${themes[themeKey as keyof typeof themes].name}`);
       } else {
         setHistory((prev) => [
           ...prev,
@@ -152,7 +70,7 @@ const InteractiveDemo = () => {
       const nextIndex = (currentIndex + 1) % themeKeys.length;
       const nextTheme = themeKeys[nextIndex] as keyof typeof themes;
       setCurrentTheme(nextTheme);
-      setHistory((prev) => [...prev, `✓ Cycled to ${themes[nextTheme].name}`]);
+      toast.success(`Cycled to ${themes[nextTheme].name}`);
     } else if (trimmedCmd === ":help" || trimmedCmd === "help") {
       setHistory((prev) => [
         ...prev,
@@ -183,15 +101,54 @@ const InteractiveDemo = () => {
 
   const handleThemeSelect = (themeKey: keyof typeof themes) => {
     setCurrentTheme(themeKey);
-    setHistory((prev) => [
-      ...prev,
-      `> :FkTheme ${themeKey}`,
-      `✓ Theme switched to ${themes[themeKey].name}`,
-    ]);
+    toast.success(`Theme switched to ${themes[themeKey].name}`);
     setShowPicker(false);
   };
 
   const theme = themes[currentTheme];
+
+  const syntaxTheme = {
+    'pre[class*="language-"]': {
+      ...vscDarkPlus['pre[class*="language-"]'],
+      background: 'transparent',
+    },
+    'code[class*="language-"]': {
+      ...vscDarkPlus['code[class*="language-"]'],
+      color: theme.fg,
+      background: 'transparent',
+    },
+    comment: { color: theme.comment },
+    keyword: { color: theme.keyword },
+    string: { color: theme.string },
+    function: { color: theme.function },
+    variable: { color: theme.variable },
+    punctuation: { color: theme.fg },
+    operator: { color: theme.fg },
+    number: { color: theme.keyword },
+    property: { color: theme.keyword },
+    tag: { color: theme.keyword },
+    boolean: { color: theme.keyword },
+    symbol: { color: theme.keyword },
+    deleted: { color: theme.keyword },
+    selector: { color: theme.string },
+    'attr-name': { color: theme.string },
+    char: { color: theme.string },
+    builtin: { color: theme.string },
+    inserted: { color: theme.string },
+    entity: { color: theme.function, cursor: 'help' },
+    url: { color: theme.function },
+    '.language-css .token.string': { color: theme.function },
+    '.style .token.string': { color: theme.function },
+    atrule: { color: theme.variable },
+    'attr-value': { color: theme.variable },
+    'class-name': { color: theme.function },
+    regex: { color: theme.variable },
+    important: { color: theme.variable, fontWeight: 'bold' },
+    bold: { fontWeight: 'bold' },
+    italic: { fontStyle: 'italic' },
+  };
+
+  
 
   const quickCommands = [
     { label: "Catppuccin", cmd: ":FkTheme catppuccin" },
@@ -312,60 +269,7 @@ const InteractiveDemo = () => {
             </div>
 
             <div className="p-6 font-mono text-sm leading-relaxed overflow-x-auto transition-all duration-500">
-              <pre style={{ color: theme.fg }}>
-                <span style={{ color: theme.comment }}>-- Configure awesome plugin</span>
-                {"\n"}
-                <span style={{ color: theme.keyword }}>local function</span>{" "}
-                <span style={{ color: theme.function }}>setup</span>
-                <span style={{ color: theme.fg }}>()</span>
-                {"\n  "}
-                <span style={{ color: theme.function }}>require</span>
-                <span style={{ color: theme.fg }}>(</span>
-                <span style={{ color: theme.string }}>"fkthemes"</span>
-                <span style={{ color: theme.fg }}>).</span>
-                <span style={{ color: theme.function }}>setup</span>
-                <span style={{ color: theme.fg }}>({"{"}</span>
-                {"\n    "}
-                <span style={{ color: theme.variable }}>themes</span>
-                <span style={{ color: theme.fg }}> = {"{"} </span>
-                <span style={{ color: theme.string }}>"catppuccin"</span>
-                <span style={{ color: theme.fg }}>, </span>
-                <span style={{ color: theme.string }}>"tokyonight"</span>
-                <span style={{ color: theme.fg }}> {"}"},</span>
-                {"\n    "}
-                <span style={{ color: theme.variable }}>default_theme</span>
-                <span style={{ color: theme.fg }}> = </span>
-                <span style={{ color: theme.string }}>"catppuccin"</span>
-                <span style={{ color: theme.fg }}>,</span>
-                {"\n    "}
-                <span style={{ color: theme.variable }}>transparent_background</span>
-                <span style={{ color: theme.fg }}> = </span>
-                <span style={{ color: theme.keyword }}>true</span>
-                <span style={{ color: theme.fg }}>,</span>
-                {"\n  "}
-                <span style={{ color: theme.fg }}>{"}"})</span>
-                {"\n  \n  "}
-                <span style={{ color: theme.comment }}>-- Set custom keymaps</span>
-                {"\n  "}
-                <span style={{ color: theme.fg }}>vim.keymap.</span>
-                <span style={{ color: theme.function }}>set</span>
-                <span style={{ color: theme.fg }}>(</span>
-                <span style={{ color: theme.string }}>"n"</span>
-                <span style={{ color: theme.fg }}>, </span>
-                <span style={{ color: theme.string }}>"&lt;leader&gt;tp"</span>
-                <span style={{ color: theme.fg }}>, </span>
-                <span style={{ color: theme.string }}>":FkThemePicker&lt;CR&gt;"</span>
-                <span style={{ color: theme.fg }}>)</span>
-                {"\n"}
-                <span style={{ color: theme.keyword }}>end</span>
-                {"\n\n"}
-                <span style={{ color: theme.keyword }}>return</span>
-                <span style={{ color: theme.fg }}> {"{"} </span>
-                <span style={{ color: theme.variable }}>setup</span>
-                <span style={{ color: theme.fg }}> = </span>
-                <span style={{ color: theme.variable }}>setup</span>
-                <span style={{ color: theme.fg }}> {"}"}</span>
-              </pre>
+              <CodeBlock language="lua" code={codeExample} customStyle={syntaxTheme} />
             </div>
           </Card>
         </div>
