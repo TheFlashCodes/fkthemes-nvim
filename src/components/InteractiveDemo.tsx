@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { toast } from "sonner";
+import { Howl } from 'howler';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Terminal, ChevronRight } from "lucide-react";
@@ -49,6 +50,7 @@ const InteractiveDemo = () => {
       if (themeKey && themeKey in themes) {
         setCurrentTheme(themeKey as keyof typeof themes);
         toast.success(`Theme switched to ${themes[themeKey as keyof typeof themes].name}`);
+        playNotificationSound();
       } else {
         setHistory((prev) => [
           ...prev,
@@ -71,6 +73,7 @@ const InteractiveDemo = () => {
       const nextTheme = themeKeys[nextIndex] as keyof typeof themes;
       setCurrentTheme(nextTheme);
       toast.success(`Cycled to ${themes[nextTheme].name}`);
+      playNotificationSound();
     } else if (trimmedCmd === ":help" || trimmedCmd === "help") {
       setHistory((prev) => [
         ...prev,
@@ -102,7 +105,15 @@ const InteractiveDemo = () => {
   const handleThemeSelect = (themeKey: keyof typeof themes) => {
     setCurrentTheme(themeKey);
     toast.success(`Theme switched to ${themes[themeKey].name}`);
+    playNotificationSound();
     setShowPicker(false);
+  };
+
+  const playNotificationSound = () => {
+    const sound = new Howl({
+      src: ['/notification.mp3']
+    });
+    sound.play();
   };
 
   const theme = themes[currentTheme];
