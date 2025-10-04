@@ -1,5 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Terminal } from "lucide-react";
+import CodeBlock from "@/components/ui/CodeBlock";
+import { useContext } from "react";
+import { ThemeContext, themes } from "@/contexts/ThemeContext";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const commands = [
   {
@@ -29,6 +33,49 @@ const commands = [
 ];
 
 const Commands = () => {
+  const { theme } = useContext(ThemeContext);
+
+  const syntaxTheme = {
+    ...vscDarkPlus,
+    'pre[class*="language-"]': {
+      ...vscDarkPlus['pre[class*="language-"]'],
+      background: 'transparent',
+    },
+    'code[class*="language-"]': {
+      ...vscDarkPlus['code[class*="language-"]'],
+      color: themes[theme].fg,
+      background: 'transparent',
+    },
+    comment: { color: themes[theme].comment },
+    keyword: { color: themes[theme].keyword },
+    string: { color: themes[theme].string },
+    function: { color: themes[theme].function },
+    variable: { color: themes[theme].variable },
+    punctuation: { color: themes[theme].fg },
+    operator: { color: themes[theme].fg },
+    number: { color: themes[theme].keyword },
+    property: { color: themes[theme].keyword },
+    tag: { color: themes[theme].keyword },
+    boolean: { color: themes[theme].keyword },
+    symbol: { color: themes[theme].keyword },
+    deleted: { color: themes[theme].keyword },
+    selector: { color: themes[theme].string },
+    'attr-name': { color: themes[theme].string },
+    char: { color: themes[theme].string },
+    builtin: { color: themes[theme].string },
+    inserted: { color: themes[theme].string },
+    entity: { color: themes[theme].function, cursor: 'help' },
+    url: { color: themes[theme].function },
+    '.language-css .token.string': { color: themes[theme].function },
+    '.style .token.string': { color: themes[theme].function },
+    atrule: { color: themes[theme].variable },
+    'attr-value': { color: themes[theme].variable },
+    'class-name': { color: themes[theme].function },
+    regex: { color: themes[theme].variable },
+    important: { color: themes[theme].variable, fontWeight: 'bold' },
+    bold: { fontWeight: 'bold' },
+    italic: { fontStyle: 'italic' },
+  };
   return (
     <section className="py-24 px-6 relative">
       <div className="max-w-5xl mx-auto">
@@ -52,9 +99,7 @@ const Commands = () => {
                   <Terminal className="w-5 h-5 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <code className="text-lg font-mono text-accent font-semibold">
-                    {item.command}
-                  </code>
+                  <CodeBlock language="vim" code={item.command} customStyle={syntaxTheme} />
                   <p className="text-muted-foreground mt-1">{item.description}</p>
                 </div>
               </div>
@@ -68,32 +113,9 @@ const Commands = () => {
             Lua API
           </h3>
           <div className="space-y-2 font-mono text-sm">
-            <div className="text-muted-foreground">
-              <span className="text-accent">require</span>
-              <span className="text-foreground">(</span>
-              <span className="text-green-400">"fkthemes"</span>
-              <span className="text-foreground">).</span>
-              <span className="text-accent">switch_theme</span>
-              <span className="text-foreground">(</span>
-              <span className="text-green-400">"theme_name"</span>
-              <span className="text-foreground">)</span>
-            </div>
-            <div className="text-muted-foreground">
-              <span className="text-accent">require</span>
-              <span className="text-foreground">(</span>
-              <span className="text-green-400">"fkthemes"</span>
-              <span className="text-foreground">).</span>
-              <span className="text-accent">toggle_transparency</span>
-              <span className="text-foreground">()</span>
-            </div>
-            <div className="text-muted-foreground">
-              <span className="text-accent">require</span>
-              <span className="text-foreground">(</span>
-              <span className="text-green-400">"fkthemes"</span>
-              <span className="text-foreground">).</span>
-              <span className="text-accent">get_current_theme</span>
-              <span className="text-foreground">()</span>
-            </div>
+            <CodeBlock language="lua" code={`require("fkthemes").switch_theme("theme_name")`} customStyle={syntaxTheme} />
+            <CodeBlock language="lua" code={`require("fkthemes").toggle_transparency()`} customStyle={syntaxTheme} />
+            <CodeBlock language="lua" code={`require("fkthemes").get_current_theme()`} customStyle={syntaxTheme} />
           </div>
         </Card>
       </div>
