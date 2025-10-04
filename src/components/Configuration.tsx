@@ -1,7 +1,54 @@
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import CodeBlock from "@/components/ui/CodeBlock";
+import { useContext } from "react";
+import { ThemeContext, themes } from "@/contexts/ThemeContext";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const Configuration = () => {
+  const { theme } = useContext(ThemeContext);
+
+  const syntaxTheme = {
+    ...vscDarkPlus,
+    'pre[class*="language-"]': {
+      ...vscDarkPlus['pre[class*="language-"]'],
+      background: 'transparent',
+    },
+    'code[class*="language-"]': {
+      ...vscDarkPlus['code[class*="language-"]'],
+      color: themes[theme].fg,
+      background: 'transparent',
+    },
+    comment: { color: themes[theme].comment },
+    keyword: { color: themes[theme].keyword },
+    string: { color: themes[theme].string },
+    function: { color: themes[theme].function },
+    variable: { color: themes[theme].variable },
+    punctuation: { color: themes[theme].fg },
+    operator: { color: themes[theme].fg },
+    number: { color: themes[theme].keyword },
+    property: { color: themes[theme].keyword },
+    tag: { color: themes[theme].keyword },
+    boolean: { color: themes[theme].keyword },
+    symbol: { color: themes[theme].keyword },
+    deleted: { color: themes[theme].keyword },
+    selector: { color: themes[theme].string },
+    'attr-name': { color: themes[theme].string },
+    char: { color: themes[theme].string },
+    builtin: { color: themes[theme].string },
+    inserted: { color: themes[theme].string },
+    entity: { color: themes[theme].function, cursor: 'help' },
+    url: { color: themes[theme].function },
+    '.language-css .token.string': { color: themes[theme].function },
+    '.style .token.string': { color: themes[theme].function },
+    atrule: { color: themes[theme].variable },
+    'attr-value': { color: themes[theme].variable },
+    'class-name': { color: themes[theme].function },
+    regex: { color: themes[theme].variable },
+    important: { color: themes[theme].variable, fontWeight: 'bold' },
+    bold: { fontWeight: 'bold' },
+    italic: { fontStyle: 'italic' },
+  };
   return (
     <section className="py-24 px-6 relative">
       <div className="max-w-5xl mx-auto">
@@ -27,8 +74,7 @@ const Configuration = () => {
                 <span className="text-sm text-muted-foreground font-mono">Default configuration</span>
               </div>
               <div className="p-6 overflow-x-auto">
-                <pre className="font-mono text-sm leading-relaxed text-foreground">
-{`require("fkthemes").setup({
+                <CodeBlock language="lua" code={`require("fkthemes").setup({
   transparent_background = false,
   themes = {
     "tokyonight",
@@ -39,8 +85,7 @@ const Configuration = () => {
     "moonlight",
   },
   default_theme = "tokyonight",
-})`}
-                </pre>
+})`} customStyle={syntaxTheme} />
               </div>
             </Card>
           </TabsContent>
@@ -51,8 +96,7 @@ const Configuration = () => {
                 <span className="text-sm text-muted-foreground font-mono">Advanced options</span>
               </div>
               <div className="p-6 overflow-x-auto">
-                <pre className="font-mono text-sm leading-relaxed text-foreground">
-{`require("fkthemes").setup({
+                <CodeBlock language="lua" code={`require("fkthemes").setup({
   transparent_background = true,
   themes = {
     "tokyonight",
@@ -77,8 +121,7 @@ const Configuration = () => {
     border = "rounded",
     preview_size = 0.8,
   },
-})`}
-                </pre>
+})`} customStyle={syntaxTheme} />
               </div>
             </Card>
           </TabsContent>
@@ -89,8 +132,7 @@ const Configuration = () => {
                 <span className="text-sm text-muted-foreground font-mono">Custom keymaps</span>
               </div>
               <div className="p-6 overflow-x-auto">
-                <pre className="font-mono text-sm leading-relaxed text-foreground">
-{`require("fkthemes").setup({
+                <CodeBlock language="lua" code={`require("fkthemes").setup({
   keymaps = {
     enable = true,
     open_picker = {
@@ -112,8 +154,7 @@ const Configuration = () => {
       opts = { desc = "Previous theme" },
     },
   },
-})`}
-                </pre>
+})`} customStyle={syntaxTheme} />
               </div>
             </Card>
           </TabsContent>
