@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import InteractiveDemo from "@/components/InteractiveDemo";
@@ -9,12 +10,23 @@ import Footer from "@/components/Footer";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Hero />
-      <Features />
+      <Navbar />
+      <div id="home">
+        <Hero />
+      </div>
+      <div id="features">
+        <Features />
+      </div>
       <InteractiveDemo />
-      <Installation />
-      <Configuration />
-      <Commands />
+      <div id="installation">
+        <Installation />
+      </div>
+      <div id="configuration">
+        <Configuration />
+      </div>
+      <div id="commands">
+        <Commands />
+      </div>
       <Footer />
     </div>
   );

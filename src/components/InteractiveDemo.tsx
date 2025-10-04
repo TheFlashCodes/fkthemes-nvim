@@ -64,6 +64,26 @@ const themes = {
     function: "#82aaff",
     variable: "#ffcb6b",
   },
+  dracula: {
+    name: "Dracula",
+    bg: "#282a36",
+    fg: "#f8f8f2",
+    comment: "#6272a4",
+    keyword: "#ff79c6",
+    string: "#f1fa8c",
+    function: "#8be9fd",
+    variable: "#ffb86c",
+  },
+  nord: {
+    name: "Nord",
+    bg: "#2e3440",
+    fg: "#d8dee9",
+    comment: "#616e88",
+    keyword: "#81a1c1",
+    string: "#a3be8c",
+    function: "#88c0d0",
+    variable: "#ebcb8b",
+  },
 };
 
 const codeExample = `-- Configure awesome plugin
@@ -83,6 +103,7 @@ return { setup = setup }`;
 const InteractiveDemo = () => {
   const [currentTheme, setCurrentTheme] = useState<keyof typeof themes>("catppuccin");
   const [input, setInput] = useState("");
+  const [showPicker, setShowPicker] = useState(false);
   const [history, setHistory] = useState<string[]>([
     "Welcome to fkthemes.nvim interactive demo!",
     'Try: ":FkTheme catppuccin" or ":FkTheme tokyonight"',
@@ -118,9 +139,7 @@ const InteractiveDemo = () => {
       }
     } else if (trimmedCmd === ":fkthemepicker") {
       setHistory((prev) => [...prev, "→ Opening theme picker..."]);
-      setTimeout(() => {
-        setHistory((prev) => [...prev, "Available themes: " + Object.keys(themes).join(", ")]);
-      }, 500);
+      setShowPicker(true);
     } else if (trimmedCmd === ":fkthemelist") {
       setHistory((prev) => [
         ...prev,
@@ -162,6 +181,16 @@ const InteractiveDemo = () => {
     }
   };
 
+  const handleThemeSelect = (themeKey: keyof typeof themes) => {
+    setCurrentTheme(themeKey);
+    setHistory((prev) => [
+      ...prev,
+      `> :FkTheme ${themeKey}`,
+      `✓ Theme switched to ${themes[themeKey].name}`,
+    ]);
+    setShowPicker(false);
+  };
+
   const theme = themes[currentTheme];
 
   const quickCommands = [
@@ -169,10 +198,12 @@ const InteractiveDemo = () => {
     { label: "Tokyo Night", cmd: ":FkTheme tokyonight" },
     { label: "Gruvbox", cmd: ":FkTheme gruvbox" },
     { label: "Rose Pine", cmd: ":FkTheme rose-pine" },
+    { label: "Dracula", cmd: ":FkTheme dracula" },
+    { label: "Nord", cmd: ":FkTheme nord" },
   ];
 
   return (
-    <section className="py-24 px-6 relative">
+    <section id="demo" className="py-24 px-6 relative">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -187,11 +218,16 @@ const InteractiveDemo = () => {
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Terminal */}
-          <Card className="bg-card border-border overflow-hidden flex flex-col">
-            <div className="bg-secondary px-4 py-3 flex items-center justify-between border-b border-border">
+          <Card className="bg-card border-border overflow-hidden flex flex-col rounded-xl shadow-xl">
+            <div className="bg-gradient-to-b from-secondary to-secondary/80 px-4 py-3 flex items-center justify-between border-b border-border">
               <div className="flex items-center gap-3">
-                <Terminal className="w-4 h-4 text-primary" />
-                <span className="text-sm text-foreground font-medium">Interactive Terminal</span>
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                  <div className="w-3 h-3 rounded-full bg-green-500" />
+                </div>
+                <Terminal className="w-4 h-4 text-primary ml-2" />
+                <span className="text-sm text-foreground font-medium">fkthemes.nvim</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="text-xs text-muted-foreground">Current:</div>
@@ -333,6 +369,50 @@ const InteractiveDemo = () => {
             </div>
           </Card>
         </div>
+
+        {/* Theme Picker Modal */}
+        {showPicker && (
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-2xl bg-card border-border p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold text-foreground">Theme Picker</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowPicker(false)}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  ✕
+                </Button>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {Object.entries(themes).map(([key, themeData]) => (
+                  <button
+                    key={key}
+                    onClick={() => handleThemeSelect(key as keyof typeof themes)}
+                    className="group relative p-4 rounded-lg border-2 border-border hover:border-primary transition-all duration-300 text-left"
+                    style={{ backgroundColor: themeData.bg }}
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-bold" style={{ color: themeData.fg }}>
+                        {themeData.name}
+                      </span>
+                      {currentTheme === key && (
+                        <span className="text-primary text-xl">✓</span>
+                      )}
+                    </div>
+                    <div className="flex gap-1 mt-3">
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: themeData.keyword }} />
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: themeData.string }} />
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: themeData.function }} />
+                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: themeData.variable }} />
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </Card>
+          </div>
+        )}
 
         <div className="mt-8 text-center">
           <p className="text-sm text-muted-foreground">
