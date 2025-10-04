@@ -312,7 +312,7 @@ const Docs = () => {
                   onClick={() => setActiveSection(section.id)}
                   variant={activeSection === section.id ? "default" : "outline"}
                   size="sm"
-                  className="whitespace-nowrap gap-2"
+                  className="whitespace-nowrap gap-2 hover:text-primary hover:border-primary"
                 >
                   <Icon className="w-4 h-4" />
                   {section.title}

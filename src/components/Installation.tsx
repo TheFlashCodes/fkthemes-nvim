@@ -55,7 +55,7 @@ const Installation = () => {
               variant="ghost"
               size="sm"
               onClick={copyToClipboard}
-              className="hover:bg-primary/10"
+              className="hover:bg-primary/10 hover:text-primary"
             >
               {copied ? (
                 <>

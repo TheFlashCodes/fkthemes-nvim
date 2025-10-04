@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Github } from "lucide-react";
+import FkIcon from "@/assets/FK-icon.png";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -46,6 +47,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
+            <img src={FkIcon} alt="Fkthemes Logo" className="h-8 w-8" />
             <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
               fkthemes.nvim
             </span>
@@ -79,7 +81,7 @@ const Navbar = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button size="sm" variant="outline" className="gap-2">
+              <Button size="sm" variant="outline" className="gap-2 transition-colors hover:bg-primary hover:text-primary-foreground">
                 <Github className="w-4 h-4" />
                 GitHub
               </Button>
@@ -126,7 +128,7 @@ const Navbar = () => {
               rel="noopener noreferrer"
               className="block"
             >
-              <Button size="sm" variant="outline" className="gap-2 w-full">
+              <Button size="sm" variant="outline" className="gap-2 w-full transition-colors hover:bg-primary hover:text-primary-foreground">
                 <Github className="w-4 h-4" />
                 GitHub
               </Button>

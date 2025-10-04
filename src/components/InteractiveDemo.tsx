@@ -280,7 +280,7 @@ const InteractiveDemo = () => {
                   key={cmd.cmd}
                   size="sm"
                   variant="outline"
-                  className="text-xs border-primary/30 hover:border-primary hover:bg-primary/10"
+                  className="text-xs border-primary/30 hover:border-primary hover:bg-primary/10 hover:text-primary"
                   onClick={() => {
                     setInput(cmd.cmd);
                     inputRef.current?.focus();
@@ -380,7 +380,7 @@ const InteractiveDemo = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowPicker(false)}
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-primary"
                 >
                   ✕
                 </Button>

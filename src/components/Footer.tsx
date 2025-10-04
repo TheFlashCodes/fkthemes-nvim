@@ -27,7 +27,7 @@ const Footer = () => {
             <Button
               variant="outline"
               size="sm"
-              className="border-primary/30 hover:border-primary hover:bg-primary/10"
+              className="border-primary/30 hover:border-primary hover:bg-primary/10 hover:text-primary"
               asChild
             >
               <a
@@ -42,7 +42,7 @@ const Footer = () => {
             <Button
               variant="outline"
               size="sm"
-              className="border-primary/30 hover:border-primary hover:bg-primary/10"
+              className="border-primary/30 hover:border-primary hover:bg-primary/10 hover:text-primary"
               asChild
             >
               <a

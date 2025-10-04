@@ -27,7 +27,7 @@ const Hero = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-in fade-in slide-in-from-bottom-10 duration-700 delay-300">
           <Button 
             size="lg" 
-            className="text-lg px-8 py-6 bg-gradient-primary hover:shadow-glow transition-all duration-300 hover:scale-105"
+            className="text-lg px-8 py-6 bg-gradient-primary hover:shadow-glow hover:shadow-accent transition-all duration-300 hover:scale-105"
             asChild
           >
             <a href="#installation">Get Started</a>
@@ -35,7 +35,7 @@ const Hero = () => {
           <Button 
             size="lg" 
             variant="outline" 
-            className="text-lg px-8 py-6 border-primary/30 hover:border-primary hover:bg-primary/10 transition-all duration-300"
+            className="text-lg px-8 py-6 border-primary/30 hover:border-primary hover:bg-primary/10 hover:text-primary transition-all duration-300"
             asChild
           >
             <a href="https://github.com/flashcodes-themayankjha/fkthemes.nvim" target="_blank" rel="noopener noreferrer">
